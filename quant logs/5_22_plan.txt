@@ -1,0 +1,173 @@
+============================================================
+QUANT FINANCE STUDY PLAN — DAY 2
+============================================================
+
+SCHEDULE OVERVIEW
+-----------------
+9:00  – 10:30  Block 1: Reading — TVM deeper (annuities, perpetuities, NPV)
+10:30 – 12:30  Block 2: Problem set (12 problems)
+12:30 – 1:15   Lunch
+1:15  – 2:15   Block 3: Code review + annuity code upgrade [DONE]
+2:15  – 4:00   Block 4: Python — control flow & functions
+4:15  – 6:00   Block 5: Mini-project — TVM Calculator v2
+6:00  – 6:15   Block 6: Daily log
+
+
+============================================================
+BLOCK 1 — READING (9:00–10:30)
+============================================================
+
+Key concepts to learn today:
+
+ORDINARY ANNUITY
+  A series of equal payments made at the END of each period.
+  PV = PMT x [1 - (1 + r)^(-n)] / r
+  PMT = payment amount, r = rate per period, n = number of periods
+
+ANNUITY DUE
+  Same as ordinary annuity but payments at the BEGINNING of each period.
+  Worth slightly more. Convert by multiplying ordinary annuity result by (1 + r).
+
+PERPETUITY
+  An annuity that pays forever.
+  PV = PMT / r
+
+NPV (Net Present Value)
+  Sum of all discounted cash flows minus your initial investment.
+  If NPV > 0, the investment is worth making.
+
+READING SOURCES (in order):
+1. Khan Academy — Time value of money:
+   https://www.khanacademy.org/economics-finance-domain/core-finance/interest-tutorial
+   Watch: "Present value", "Annuities", "Perpetuities" — skip the others for now.
+
+2. After each video: write the formula in your own words with one example you made up.
+
+
+============================================================
+BLOCK 2 — PROBLEM SET (10:30–12:30)
+============================================================
+
+Do by hand first, then check with Python.
+
+1.  You receive $300 at the end of each year for 5 years. Discount rate is 6%.
+    What is the present value of this annuity?
+
+2.  Same as #1, but payments come at the BEGINNING of each year (annuity due).
+    What is the PV now?
+
+3.  A perpetuity pays $1,000/year. The discount rate is 5%.
+    What is it worth today?
+
+4.  What if that perpetuity's discount rate rises to 8%?
+    What happens to its value — and why does this matter?
+
+5.  You are offered an investment: pay $4,000 today, receive $1,200/year for 4 years.
+    Discount rate is 7%. Should you take it? (Calculate NPV.)
+
+6.  A bond pays $50 every 6 months for 3 years, then returns $1,000 at maturity.
+    Annual discount rate is 8% (so 4% per 6 months).
+    What is the bond worth today?
+    Hint: find PV of each cash flow individually.
+
+7.  You need $20,000 in 6 years. You save the same amount at the end of each year
+    and earn 5%. How much must you save annually?
+    Hint: solve the annuity FV formula for PMT.
+
+8.  A company promises $500/month forever. Annual rate is 9% (monthly = 9%/12).
+    What is this stream worth today?
+
+9.  You can receive either:
+    (A) $5,000 today, or
+    (B) $800/year for 8 years at 6%.
+    Which is better?
+
+10. Recalculate #9 with a 10% discount rate. Does your answer change? Why?
+
+11. An investment costs $10,000 and pays back $2,500/year for 5 years at 6%.
+    Calculate the NPV. Is it a good investment?
+
+12. STRETCH: A growing perpetuity pays $100 next year, growing at 2%/year forever.
+    Discount rate is 7%. What is it worth?
+    Hint: PV = PMT / (r - g), where g is the growth rate.
+
+
+============================================================
+BLOCK 3 — CODE REVIEW (1:15–2:15)  [ALREADY DONE]
+============================================================
+
+Summary of feedback on your annuity code:
+- Logic and math were correct.
+- Do not use "sum" as a variable name — it shadows Python's built-in sum() function.
+  Use "pv", "total", or "annuity_pv" instead.
+- Name variables descriptively (e.g. "payment" instead of unlabeled 500).
+
+Corrected version:
+  payment = 500
+  r = 0.06
+  pv = 0
+  for year in range(1, 6):
+      discounted = payment / (1 + r) ** year
+      pv += discounted
+  print(f"Answer to question 10: {pv:.2f}")
+
+Next step: extend your code to handle annuity PV, NPV, and a year-by-year table.
+
+
+============================================================
+BLOCK 4 — PYTHON MECHANICS (2:15–4:00)
+============================================================
+
+Write each of these 6 functions from scratch.
+Test each with at least 2 inputs. Check edge cases (empty list, rate of 0, etc.)
+
+Exercise 1:
+  Write a function that takes a list of numbers and returns their average.
+
+Exercise 2:
+  Write a function that checks if a number is prime.
+
+Exercise 3:
+  Write a function that takes a principal, rate, and years,
+  and returns a list of (year, balance) tuples — one per year.
+
+Exercise 4:
+  Write a function that takes a list of cash flows and a discount rate,
+  and returns their NPV. (Cash flow at index 0 = year 0.)
+
+Exercise 5:
+  Write a function that counts how many numbers in a list
+  are above a given threshold.
+
+Exercise 6:
+  Write a function that finds the year at which a balance first exceeds
+  a target amount, given a starting amount, rate, and target.
+
+
+============================================================
+BLOCK 5 — MINI-PROJECT: TVM CALCULATOR v2 (4:15–6:00)
+============================================================
+
+File name: tvm_calculator.py
+
+Build a menu-driven calculator that:
+  - Shows a menu: (1) Future Value  (2) Present Value
+                  (3) Annuity PV   (4) NPV   (5) Quit
+  - Loops until the user picks Quit
+  - Calls the functions you wrote in Block 4 where applicable
+  - Prints results formatted with dollar signs and 2 decimal places
+
+We will keep adding to this file over the coming days.
+
+
+============================================================
+BLOCK 6 — DAILY LOG (6:00–6:15)
+============================================================
+
+Write down and report back:
+  1. What did you actually finish today?
+  2. What confused you most?
+  3. One thing that genuinely clicked.
+  4. Any questions you want answered tomorrow.
+
+============================================================
