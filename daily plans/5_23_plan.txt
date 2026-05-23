@@ -1,0 +1,240 @@
+============================================================
+QUANT FINANCE STUDY PLAN — DAY 3
+============================================================
+
+SCHEDULE OVERVIEW
+-----------------
+9:00  – 10:15  Block 1: Reading — Probability fundamentals
+10:15 – 12:30  Block 2: Problem set — 15 probability problems
+12:30 – 1:15   Lunch
+1:15  – 2:45   Block 3: NumPy crash course + 8 exercises
+2:45  – 4:30   Block 4: NumPy + probability crossover simulations
+4:30  – 5:30   Block 5: Mini-project — Dice simulator + Law of Large Numbers
+5:30  – 5:45   Block 6: Daily log
+
+Target end: ~5:45 PM
+
+
+============================================================
+BLOCK 1 — READING: PROBABILITY FUNDAMENTALS (9:00–10:15)
+============================================================
+
+Read both sources and take notes as you go.
+
+SOURCE 1 — Seeing Theory (Brown University, interactive):
+  https://seeing-theory.brown.edu/basic-probability/index.html
+  Read "Basic Probability." Play with the visualizations.
+  Focus on: sample spaces, events, addition/multiplication rules.
+
+SOURCE 2 — Stat Trek probability rules:
+  https://stattrek.com/probability/probability-rules
+  Read: "What is Probability", "Rules of Probability."
+  Stop before conditional probability — that's tomorrow.
+
+KEY TERMS — define all of these in your notes before Block 2:
+
+  Sample space     — the set of all possible outcomes.
+                     Example: rolling a die → {1, 2, 3, 4, 5, 6}
+
+  Event            — a subset of the sample space.
+                     Example: "rolling even" → {2, 4, 6}
+
+  Complement       — everything NOT in an event.
+                     P(A complement) = 1 − P(A)
+
+  Mutually exclusive — two events that can't both happen at once.
+                     Example: rolling a 2 AND a 5 on one die.
+
+  Independent events — one happening doesn't affect the other.
+                     Example: flipping a coin twice.
+
+  Addition rule    — P(A or B) = P(A) + P(B) − P(A and B)
+                     If mutually exclusive: P(A or B) = P(A) + P(B)
+
+  Multiplication rule — P(A and B) = P(A) × P(B) if independent.
+
+
+============================================================
+BLOCK 2 — PROBLEM SET: 15 PROBABILITY PROBLEMS (10:15–12:30)
+============================================================
+
+Work by hand first. Show reasoning, not just the answer.
+
+--- SECTION A: Basic probability ---
+
+1. You roll a fair 6-sided die. What is P(rolling > 4)?
+
+2. You draw one card from a 52-card deck. What is P(drawing a heart)?
+
+3. You flip a fair coin 3 times. What is P(exactly 2 heads)?
+
+4. A bag has 4 red balls and 6 blue balls. You draw one. What is P(red)?
+
+5. Using the bag from Q4: what is P(not red)?
+
+--- SECTION B: Addition and multiplication rules ---
+
+6. You roll two fair dice. What is P(sum = 7)?
+
+7. You roll one die. What is P(rolling a 3 OR a 5)?
+
+8. You flip a coin and roll a die. What is P(heads AND rolling a 6)?
+
+9. In a class of 30 students, 12 play soccer, 10 play basketball, 4 play both.
+   What is P(a random student plays soccer OR basketball)?
+
+10. You draw two cards WITH replacement. What is P(both are aces)?
+
+--- SECTION C: Harder, multi-step ---
+
+11. You draw two cards WITHOUT replacement. What is P(both are aces)?
+    Hint: the second draw depends on the first.
+
+12. A factory has two machines.
+    Machine A: 60% of output, 2% defect rate.
+    Machine B: 40% of output, 5% defect rate.
+    What fraction of ALL items are defective?
+    Hint: weighted average — don't overthink it yet.
+
+13. You roll a die 3 times. What is P(at least one 6)?
+    Hint: use the complement.
+
+14. A password is 3 characters, each chosen from {A, B, C, D, E}.
+    How many distinct passwords exist?
+    What is P(guessing the correct one on the first try)?
+
+15. A 10-question true/false test, all guessed randomly.
+    What is P(getting all 10 correct)?
+
+
+============================================================
+BLOCK 3 — NUMPY CRASH COURSE + 8 EXERCISES (1:15–2:45)
+============================================================
+
+READ FIRST:
+  NumPy Quickstart (official docs):
+  https://numpy.org/doc/stable/user/quickstart.html
+  Read: "The Basics", "Basic Operations", "Indexing, Slicing and Iterating."
+  Stop at "Less Basic."
+
+Then create a new file: numpy_intro.py
+
+------------------------------------------------------------
+# numpy_intro.py
+
+import numpy as np
+
+# Exercise 1
+# Create a 1D array of integers from 1 to 20. Print it.
+
+# Exercise 2
+# Create a 4x4 matrix of zeros. Then set the diagonal to 1.
+# (This is called an identity matrix — you'll use these constantly.)
+
+# Exercise 3
+# Create two arrays: a = [1, 2, 3, 4] and b = [5, 6, 7, 8]
+# Add them, subtract them, multiply them element-wise, divide them.
+# Print all four results.
+
+# Exercise 4
+# Create an array of 100 evenly spaced values between 0 and 2π.
+# Compute the sine of each value. Print the first 5 and last 5.
+
+# Exercise 5
+# Create a 3x3 matrix with values 1–9.
+# Print: the first row, the second column, and the value at row 2, column 3.
+
+# Exercise 6
+# Generate an array of 1000 random numbers between 0 and 1 using np.random.
+# Compute and print: mean, median, min, max, and standard deviation.
+
+# Exercise 7
+# Create an array [3, 1, 4, 1, 5, 9, 2, 6].
+# Sort it. Then find the index of the maximum value in the ORIGINAL array.
+
+# Exercise 8
+# Matrix multiplication: create a 2x3 matrix A and a 3x2 matrix B.
+# Fill with any values. Multiply using np.dot(). Print the result shape.
+------------------------------------------------------------
+
+
+============================================================
+BLOCK 4 — NUMPY + PROBABILITY CROSSOVER (2:45–4:30)
+============================================================
+
+Use NumPy to verify your Block 2 answers via simulation.
+Create a new file: prob_simulation.py
+
+------------------------------------------------------------
+# prob_simulation.py
+
+import numpy as np
+
+# Simulation 1 — Verify Q1 (die roll > 4)
+# Roll a 6-sided die 100,000 times.
+# What fraction of rolls are > 4?
+# Print: simulated probability vs. your Q1 analytical answer.
+
+# Simulation 2 — Verify Q6 (sum of two dice = 7)
+# Roll two dice 100,000 times each.
+# What fraction of sums equal 7?
+# Compare to your Q6 answer.
+
+# Simulation 3 — Verify Q13 (at least one 6 in 3 rolls)
+# Roll a die 3 times, repeated 100,000 times.
+# What fraction contain at least one 6?
+# Compare to your Q13 answer.
+
+# Simulation 4 — Verify Q10 vs Q11
+# Represent a deck as integers 1–52 (aces = 1, 2, 3, 4).
+# Simulate drawing 2 cards with replacement (Q10) 100,000 times.
+# Simulate drawing 2 cards without replacement (Q11) 100,000 times.
+# Compare both to your analytical answers.
+------------------------------------------------------------
+
+Your simulated probabilities should be within ~0.5% of your analytical ones.
+If they're off more than that, recheck your math.
+
+
+============================================================
+BLOCK 5 — MINI-PROJECT: LAW OF LARGE NUMBERS (4:30–5:30)
+============================================================
+
+CONCEPT:
+  The Law of Large Numbers says: as you run more trials of a random
+  experiment, the average result converges to the true expected value.
+  The expected value of one fair 6-sided die roll = 3.5.
+
+Create a new file: law_of_large_numbers.py
+
+The program should:
+  1. Simulate rolling a fair 6-sided die N times.
+  2. Compute the running average after each batch.
+  3. Print a table at N = 10, 100, 1,000, 10,000, 100,000.
+
+Expected output (your numbers will vary slightly due to randomness):
+  N=10          avg=4.20
+  N=100         avg=3.67
+  N=1,000       avg=3.51
+  N=10,000      avg=3.498
+  N=100,000     avg=3.5003
+
+EXTENSION CHALLENGE (if you finish early):
+  - Add a column showing how far the running avg is from 3.5 at each step.
+  - Generalize the program to work for any fair N-sided die, not just 6.
+
+
+============================================================
+BLOCK 6 — DAILY LOG (5:30–5:45)
+============================================================
+
+Report back here with:
+  1. Did you finish all blocks?
+  2. What was most confusing?
+  3. What clicked well?
+  4. Did your simulation results match your analytical answers?
+  5. Anything else?
+
+============================================================
+END OF DAY 3
+============================================================
