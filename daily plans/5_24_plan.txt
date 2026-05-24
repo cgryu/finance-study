@@ -1,0 +1,218 @@
+============================================================
+QUANT FINANCE STUDY PLAN — DAY 4
+============================================================
+
+SCHEDULE OVERVIEW
+-----------------
+9:00  – 10:00  Block 1: Reading — Conditional probability & independence
+10:00 – 12:30  Block 2: Problem set — 18 problems
+12:30 – 1:15   Lunch
+1:15  – 2:30   Block 3: Reading — Binomial & geometric distributions
+2:30  – 4:15   Block 4: NumPy simulations — distributions & variance
+4:15  – 5:45   Block 5: Mini-project — Binomial option intuition simulator
+5:45  – 6:00   Block 6: Daily log
+
+Target end: ~6:00 PM
+
+
+============================================================
+BLOCK 1 — READING: CONDITIONAL PROBABILITY & INDEPENDENCE (9:00–10:00)
+============================================================
+
+Key terms to define in your notes before Block 2:
+
+  
+CONDITIONAL PROBABILITY
+  P(A | B) = P(A ∩ B) / P(B)
+  The probability of A given B already happened. Sample space shrinks to outcomes where B occurred.
+
+INDEPENDENCE
+  A and B are independent if P(A | B) = P(A).
+  Equivalent condition: P(A ∩ B) = P(A) · P(B)
+
+BAYES' THEOREM
+  P(A | B) = P(B | A) · P(A) / P(B)
+  Lets you reverse conditional probabilities.
+
+Read these two sources:
+1. https://www.probabilitycourse.com/chapter1/1_4_0_conditional_probability.php
+2. https://seeing-theory.brown.edu/compound-probability/index.html
+   (Play with the Bayes' theorem visualization)
+
+Task before Block 2: Write one original example of Bayes' theorem in a financial context.
+
+
+============================================================
+BLOCK 2 — PROBLEM SET: 18 PROBLEMS (10:00–12:30)
+============================================================
+
+Show all work. No worked examples given.
+
+--- CONDITIONAL PROBABILITY (1–6) ---
+
+1. A card is drawn from a standard 52-card deck. Given it's a face card (J, Q, K),
+   what's the probability it's a King?
+
+2. A bag has 4 red and 6 blue balls. You draw one without replacement. Given the first
+   draw was red, what's the probability the second draw is also red?
+
+3. P(A) = 0.4, P(B) = 0.5, P(A ∩ B) = 0.2.
+   Find P(A | B) and P(B | A). Are A and B independent?
+
+4. A factory has two machines. Machine A produces 60% of output with a 2% defect rate.
+   Machine B produces 40% with a 5% defect rate. A random item is defective — what's the
+   probability it came from Machine B? (Bayes' theorem.)
+
+5. A test for a disease is 99% accurate (true positive rate). The disease affects 1% of
+   the population. You test positive — what's the probability you actually have the disease?
+
+6. Two dice are rolled. Given the sum is at least 10, what's the probability the sum is
+   exactly 12?
+
+--- INDEPENDENCE (7–10) ---
+
+7. P(A) = 0.3, P(B) = 0.5, P(A ∩ B) = 0.15. Are A and B independent? Show why or why not.
+
+8. A coin is flipped three times. Are these independent?
+   (a) "first flip is heads" and "second flip is heads"
+   (b) "first flip is heads" and "at least one flip is heads"
+
+9. You roll a die twice. Are these independent?
+   "first roll is 4" and "sum of both rolls is 7"
+
+10. A portfolio holds two stocks. Each independently has a 10% chance of dropping >1% on
+    any given day. What's the probability both drop on the same day? What assumption are you making?
+ 
+--- DISCRETE DISTRIBUTIONS — CONCEPTUAL (11–14) ---
+(Read Block 3 first if you haven't reached 1:15 PM yet)
+
+11. A fair coin is flipped 8 times. Find P(exactly 5 heads) using the binomial formula.
+
+12. A basketball player makes free throws with probability 0.75.
+    Find P(exactly 6 out of 10 shots made).
+
+13. Find the probability that the first success in a series of independent 20%-probability
+    trials occurs on the 4th trial. (Geometric distribution.)
+
+14. A quality inspector samples items where 5% are defective. What's the probability the
+    first defective item is found within the first 10 samples?
+
+--- VARIANCE REINFORCEMENT (15–18) ---
+
+15. X is a random variable: P(X=0) = 0.3, P(X=2) = 0.5, P(X=5) = 0.2.
+    Compute E[X] and Var(X) by hand.
+
+16. Y = 3X + 1 where X is from Q15.
+    Compute E[Y] and Var(Y) using the linear transformation rules.
+
+17. X and Y are independent with Var(X) = 4 and Var(Y) = 9.
+    Find Var(2X − 3Y).
+
+18. A stock has daily returns with mean 0.1% and standard deviation 1.5%.
+    If returns are independent day to day, what are the mean and standard deviation
+    of total return over 5 days?
+
+
+============================================================
+BLOCK 3 — READING: BINOMIAL & GEOMETRIC DISTRIBUTIONS (1:15–2:30)
+============================================================
+
+Read both sources:
+1. Penn State STAT 414 — Binomial: https://online.stat.psu.edu/stat414/Lesson10
+2. Penn State STAT 414 — Geometric: https://online.stat.psu.edu/stat414/Lesson11
+
+Formulas to memorize before Block 4:
+
+BINOMIAL — number of successes in n independent trials, each with probability p:
+  P(X = k) = C(n,k) · p^k · (1−p)^(n−k)
+  E[X] = np
+  Var(X) = np(1−p)
+
+GEOMETRIC — number of trials until the first success:
+  P(X = k) = (1−p)^(k−1) · p
+  E[X] = 1/p
+  Var(X) = (1−p) / p²
+
+Task: Write one finance-relevant example of each in your notes.
+
+
+============================================================
+BLOCK 4 — NUMPY SIMULATIONS (2:30–4:15)
+============================================================
+
+Build all exercises from scratch. No starter code.
+Use: np.random.binomial, np.random.geometric, np.random.normal
+
+EXERCISE 1 — Binomial verification
+  Simulate 100,000 trials of flipping a fair coin 10 times each.
+  Print a frequency table of how often you get 0, 1, 2, ..., 10 heads.
+  Compute simulated mean and variance. Compare to np and np(1−p).
+
+EXERCISE 2 — Geometric verification
+  Simulate 100,000 trials of rolling a die until you get a 6 (p = 1/6).
+  Compute simulated mean and variance. Compare to 1/p and (1−p)/p².
+
+EXERCISE 3 — Variance of linear transformations
+  Use simulation to verify your Q17 answer.
+  Generate 100,000 samples of X and Y, compute 2X − 3Y for each trial,
+  and check that the variance of the result matches your formula.
+
+EXERCISE 4 — Multi-day stock return
+  Simulate 100,000 paths of a 5-day return sequence.
+  Each day drawn from N(0.001, 0.015²) using np.random.normal.
+  Sum each 5-day path. Find mean and std of the totals.
+  Compare to your Q18 answer.
+
+
+============================================================
+BLOCK 5 — MINI-PROJECT: BINOMIAL OPTION INTUITION SIMULATOR (4:15–5:45)
+============================================================
+
+New concept: CALL OPTION
+  Gives you the right (not obligation) to buy a stock at the STRIKE PRICE K.
+  If final stock price S > K: payoff = S − K (you profit)
+  If final stock price S < K: payoff = 0 (option expires worthless)
+
+BINOMIAL TREE (1-step):
+  At each step, stock goes UP by factor u or DOWN by factor d.
+
+PARAMETERS (hardcode these):
+  S0 = 100    # current stock price
+  K  = 105    # strike price
+  u  = 1.10   # up factor → stock goes to 110
+  d  = 0.90   # down factor → stock goes to 90
+  p  = 0.60   # probability of up move
+  r  = 0.05   # risk-free rate (annual, 1-year step)
+
+YOUR TASKS:
+  1. Compute stock price in up state and down state.
+  2. Compute option payoff in each state: max(S − K, 0)
+  3. Compute expected payoff: p * payoff_up + (1−p) * payoff_down
+  4. Discount to today: option_price = expected_payoff / (1 + r)
+  5. Simulate 100,000 paths (each = one up/down coin flip).
+     Compute average payoff, discount it. Compare to step 4.
+  6. Print a clean summary:
+       - Up price, down price
+       - Payoff in each state
+       - Analytical option price
+       - Simulated option price
+
+Key insight: Options = discounted expected values of future payoffs.
+This idea underlies ALL of derivatives pricing.
+
+
+============================================================
+BLOCK 6 — DAILY LOG (5:45–6:00)
+============================================================
+
+Send answers to these five questions at next session:
+1. Did you finish all blocks?
+2. What was the hardest part, and did you figure it out?
+3. What clicked well?
+4. Any questions that stumped you in the problem set?
+5. Anything else?
+
+
+============================================================
+END OF DAY 4
+============================================================
