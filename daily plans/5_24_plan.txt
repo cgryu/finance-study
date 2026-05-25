@@ -140,7 +140,7 @@ Task: Write one finance-relevant example of each in your notes.
 BLOCK 4 — NUMPY SIMULATIONS (2:30–4:15)
 ============================================================
 
-Build all exercises from scratch. No starter code.
+Create a file called distribution_simulations.py. Build all exercises from scratch. No starter code.
 Use: np.random.binomial, np.random.geometric, np.random.normal
 
 EXERCISE 1 — Binomial verification
@@ -168,6 +168,7 @@ EXERCISE 4 — Multi-day stock return
 BLOCK 5 — MINI-PROJECT: BINOMIAL OPTION INTUITION SIMULATOR (4:15–5:45)
 ============================================================
 
+Create a file called binomial_option_pricer.py.
 New concept: CALL OPTION
   Gives you the right (not obligation) to buy a stock at the STRIKE PRICE K.
   If final stock price S > K: payoff = S − K (you profit)

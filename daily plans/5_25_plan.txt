@@ -1,0 +1,313 @@
+============================================================
+QUANT FINANCE STUDY PLAN — DAY 5
+============================================================
+
+SCHEDULE OVERVIEW
+-----------------
+9:00  – 9:45   Block 1: Bayes' theorem reinforcement — 5 problems
+9:45  – 11:15  Block 2: Reading — Continuous distributions (normal, log-normal)
+11:15 – 12:30  Block 3: Problem set — 14 problems
+12:30 – 1:15   Lunch
+1:15  – 2:30   Block 4: SciPy crash course + 6 exercises
+2:30  – 4:30   Block 5: Extended problem set + bridge problems
+4:30  – 6:00   Block 6: Mini-project — Stock return distribution analyzer
+6:00  – 6:15   Block 7: Daily log
+
+Target end: ~6:15 PM
+
+
+============================================================
+BLOCK 1 — BAYES' THEOREM REINFORCEMENT (9:00–9:45)
+============================================================
+
+Formula to use explicitly every time:
+  P(A | B) = P(B | A) · P(A) / P(B)
+
+Expand P(B) using the law of total probability whenever needed:
+  P(B) = P(B|A)·P(A) + P(B|Aᶜ)·P(Aᶜ)
+
+PROBLEM 1
+A hedge fund uses a quant model to flag trades as "risky."
+- True positive rate (correctly flags risky trades): 90%
+- False positive rate (incorrectly flags safe trades): 8%
+- Prior: 15% of all trades are actually risky
+A trade is flagged — what's the probability it's actually risky?
+
+PROBLEM 2
+A company has three suppliers: A (50% of parts), B (30%), C (20%).
+Defect rates: A = 1%, B = 3%, C = 5%.
+A randomly selected part is defective.
+What's the probability it came from supplier B? From supplier C?
+
+PROBLEM 3
+Two urns: Urn 1 has 3 red and 7 blue balls. Urn 2 has 6 red and 4 blue.
+You pick an urn at random (50/50) and draw one ball — it's red.
+What's the probability you picked Urn 1?
+
+PROBLEM 4
+A credit analyst estimates that 5% of loan applicants will default.
+A screening test correctly identifies defaulters 80% of the time
+and incorrectly flags non-defaulters 10% of the time.
+An applicant fails the test — what's the probability they actually default?
+
+PROBLEM 5
+You have a coin that is either fair (50/50) or biased (70% heads).
+Prior probability it's fair: 0.6.
+You flip it once and get heads.
+What's the posterior probability that the coin is fair?
+
+JARGON NOTE:
+  Prior probability  = your belief BEFORE seeing evidence
+  Posterior probability = your updated belief AFTER seeing evidence
+  Bayes' theorem is the machine that converts one to the other.
+
+
+============================================================
+BLOCK 2 — READING: CONTINUOUS DISTRIBUTIONS (9:45–11:15)
+============================================================
+
+Key terms to define in your notes:
+
+CONTINUOUS RANDOM VARIABLE
+  Can take any value in an interval. P(X = exactly x) = 0.
+  You only ask about ranges: P(a < X < b).
+
+PROBABILITY DENSITY FUNCTION (PDF)
+  Curve f(x) where area under it between a and b equals P(a < X < b).
+  Total area under curve = 1.
+
+CUMULATIVE DISTRIBUTION FUNCTION (CDF)
+  F(x) = P(X ≤ x). Always goes from 0 to 1.
+
+NORMAL DISTRIBUTION
+  The bell curve. Defined by mean μ and standard deviation σ.
+  ~68% of values within 1σ, ~95% within 2σ, ~99.7% within 3σ.
+
+STANDARD NORMAL
+  Normal with μ=0 and σ=1. Written Z ~ N(0,1).
+
+LOG-NORMAL DISTRIBUTION
+  If X is log-normal, then ln(X) is normal.
+  Stock prices are modeled as log-normal (prices can't go negative).
+
+SOURCES TO READ:
+1. Normal distribution:
+   https://www.probabilitycourse.com/chapter4/4_2_3_normal.php
+   (Read sections 4.2.3 and 4.2.4)
+
+2. Log-normal:
+   https://www.probabilitycourse.com/chapter4/4_2_4_Lognormal.php
+   (Read section 4.2.4)
+
+3. CDF visual intuition (Normal tab):
+   https://seeing-theory.brown.edu/probability-distributions/index.html
+
+TASK BEFORE BLOCK 3:
+Write in your own words: why are stock prices modeled as log-normal
+rather than normal?
+
+
+============================================================
+BLOCK 3 — PROBLEM SET: CONTINUOUS DISTRIBUTIONS (11:15–12:30)
+============================================================
+
+14 problems. Show all work.
+
+--- NORMAL DISTRIBUTION (1–6) ---
+
+1. X ~ N(50, 10²). Find P(X < 60).
+   Hint: standardize to Z = (X − μ)/σ, then use 68-95-99.7 rule or Z-table.
+
+2. X ~ N(100, 15²). Find P(85 < X < 115).
+
+3. X ~ N(0, 1). Find the value z such that P(Z < z) = 0.975.
+
+4. Daily returns on an asset are normally distributed with mean 0.1%
+   and standard deviation 1.5%.
+   What's the probability of a return below −2% on any given day?
+
+5. Same asset as Q4. What's the probability of a return below −3%?
+   (This is a tail probability — you'll use this in VaR calculations later.)
+
+6. X ~ N(μ, σ²). Without numbers: if you double σ, what happens to the
+   probability of being more than 2σ from the mean? (Conceptual.)
+
+--- LOG-NORMAL DISTRIBUTION (7–10) ---
+
+7. A stock's log-return ln(S_T/S_0) ~ N(0.08, 0.04).
+   (So μ=0.08, σ²=0.04, σ=0.2.)
+   Find the expected stock price ratio E[S_T/S_0].
+   Formula: E[e^X] = e^(μ + σ²/2) when X is normal.
+
+8. Using the same parameters as Q7, find the MEDIAN stock price ratio.
+   (The median of a log-normal is e^μ.)
+
+9. Why is the mean in Q7 greater than the median in Q8?
+   What does this tell you about the shape of the log-normal distribution?
+
+10. A company's revenue is log-normally distributed with μ=5, σ=0.3
+    (parameters of the underlying normal).
+    Find P(revenue > e^5.3).
+    Hint: convert back to the normal and use the 68-95-99.7 rule.
+
+--- MIXED / HARDER (11–14) ---
+
+11. Two independent assets:
+    Asset A returns ~ N(0.05, 0.01)
+    Asset B returns ~ N(0.03, 0.0025)
+    What's the distribution of a 50/50 portfolio?
+    Hint: linear combinations of independent normals are normal.
+    Means add. Variances add scaled by weights squared.
+
+12. If Z ~ N(0,1), what is E[Z²]?
+    Hint: Variance = E[X²] − (E[X])². Use this.
+
+13. (Harder) A stock's log-return over one year is N(0.1, 0.09).
+    Stock starts at $100. What range of prices contains the middle
+    95% of outcomes one year from now?
+    Use 95% rule for normal, then convert back via exponentiation.
+
+14. (Conceptual) A risk manager says daily returns are normally distributed,
+    so extreme losses happen less than 0.1% of the time.
+    A colleague says real financial data has "fat tails."
+    What does "fat tails" mean, and why does it matter for risk management?
+
+
+============================================================
+BLOCK 4 — SCIPY CRASH COURSE + 6 EXERCISES (1:15–2:30)
+============================================================
+
+Install if needed: pip install scipy
+
+KEY FUNCTIONS:
+
+  from scipy import stats
+
+  # Normal distribution
+  dist = stats.norm(loc=50, scale=10)  # loc=mean, scale=std dev
+  dist.pdf(60)        # height of density curve at x=60
+  dist.cdf(60)        # P(X <= 60)
+  dist.ppf(0.95)      # inverse CDF — value with 95% of distribution below it
+  dist.rvs(size=1000) # generate 1000 random samples
+
+  # Standard normal
+  stats.norm.cdf(1.96)  # should be ~0.975
+
+  # Log-normal
+  stats.lognorm(s=0.2, scale=np.exp(0.08))  # s=sigma, scale=e^mu
+
+EXERCISES (implement all in one Python script):
+
+1. Reproduce Block 3 Q1 using scipy.stats.norm.cdf().
+   Print result and confirm it matches your hand calculation.
+
+2. Reproduce Q4 (P(return < -2%) for N(0.001, 0.015²)).
+   Print it.
+
+3. Use ppf() to find the 5th percentile of daily returns for that asset.
+   This is a primitive Value at Risk (VaR) — the loss you won't exceed
+   95% of the time. Print and label it clearly.
+
+4. Generate 10,000 samples from N(0.001, 0.015²) using .rvs().
+   Compute sample mean and standard deviation.
+   Print alongside true values — they should be close.
+
+5. Plot a histogram of your 10,000 samples with the true PDF overlaid.
+   Use matplotlib. Label axes.
+
+6. Create a log-normal distribution with μ=0.08, σ=0.2 using stats.lognorm.
+   Compute mean and median using .mean() and .median().
+   Confirm they match your Q7 and Q8 analytical answers.
+
+
+============================================================
+BLOCK 5 — EXTENDED PROBLEM SET + BRIDGE PROBLEMS (2:30–4:30)
+============================================================
+
+First: work through Block 3 Q11–14 if not already done.
+
+Then do these two bridge problems:
+
+BRIDGE PROBLEM A
+Using SciPy, for the stock in Q13 (log-return ~ N(0.1, 0.09), start $100):
+Find the 5th percentile of the ending stock price.
+This is a 1-year 95% VaR expressed as a price level.
+Print it clearly labeled.
+
+BRIDGE PROBLEM B
+Two assets:
+  Asset A daily returns ~ N(0.0005, 0.01²)
+  Asset B daily returns ~ N(0.0003, 0.008²)
+  Independent. 50/50 portfolio.
+
+Using SciPy, find:
+  - 1-day 95% VaR of the portfolio (5th percentile of portfolio returns)
+  - 1-day 99% VaR (1st percentile)
+
+Print both, clearly labeled.
+
+JARGON NOTE:
+  VaR (Value at Risk) answers: "what's the worst loss I should expect
+  on a bad day?" We'll build proper VaR models in Phase 2. Today is
+  just intuition-building.
+
+
+============================================================
+BLOCK 6 — MINI-PROJECT: STOCK RETURN DISTRIBUTION ANALYZER (4:30–6:00)
+============================================================
+
+Build a Python script that does all of the following:
+
+SETUP — generate synthetic data:
+  import numpy as np
+  np.random.seed(42)
+  returns = np.random.normal(loc=0.0008, scale=0.018, size=252)
+
+REQUIREMENTS:
+
+1. Compute and print: mean, std dev, skewness, kurtosis.
+   Use scipy.stats.skew() and scipy.stats.kurtosis().
+
+   Skewness: measures asymmetry. Zero = symmetric.
+             Negative = left-tailed (big losses more likely).
+   Kurtosis: measures tail heaviness. Normal = 0 (excess kurtosis).
+             Positive = fatter tails than normal.
+
+2. Fit a normal distribution to the data using stats.norm.fit().
+   Print the fitted μ and σ.
+
+3. Plot a histogram of returns with the fitted normal PDF overlaid.
+   Add a vertical line at the 5th percentile (1-day 95% VaR).
+   Label everything.
+
+4. Compute and print 95% and 99% VaR using BOTH:
+   (a) Fitted normal distribution
+   (b) Empirical data directly using np.percentile()
+
+5. Print a summary table comparing the two VaR estimates.
+
+EXTENSION (if you finish early):
+Add a second synthetic dataset with the same mean and std dev
+but drawn from a t-distribution with 4 degrees of freedom:
+  stats.t.rvs(df=4, loc=0.0008, scale=0.018, size=252)
+
+Compare its VaR to the normal estimate.
+This illustrates fat tails — a key concept in real risk management.
+
+
+============================================================
+BLOCK 7 — DAILY LOG (6:00–6:15)
+============================================================
+
+Paste these answers at the start of your next chat:
+
+1. Did you finish all blocks?
+2. What was the hardest part, and did you figure it out?
+3. What clicked well?
+4. Any Bayes problems that still felt shaky?
+5. Anything else?
+
+
+============================================================
+END OF DAY 5
+============================================================

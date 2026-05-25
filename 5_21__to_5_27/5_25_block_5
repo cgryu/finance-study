@@ -1,0 +1,29 @@
+from scipy import stats
+import numpy as np
+import matplotlib.pyplot as plt
+
+# BRIDGE PROBLEM A
+s0 = 100
+
+dist = stats.lognorm(s=0.3, scale=np.exp(0.1))
+varLower = dist.ppf(0.05) * s0
+
+print(f"The 1-year 95% VaR expressed as a price-level is ${varLower:.2f}")
+
+# BRIDGE PROBLEM B
+m1 = 0.0005
+var1 = 0.01 ** 2
+m2 = 0.0003
+var2 = 0.008 ** 2
+
+m3 = (0.5)*m1 + (0.5)*m2
+var3 = (var1 + var2) * (0.25)
+
+dist = stats.norm(m3, np.sqrt(var3))
+var95 = dist.ppf(0.05)
+var99 = dist.ppf(0.01)
+
+print(f"""
+1-Day 95% VaR: {var95}
+1-Day 99% VaR: {var99}
+""")
