@@ -1,0 +1,342 @@
+============================================================
+QUANT FINANCE STUDY PROGRAM — DAY 7
+Phase 1, Week 2
+============================================================
+
+ROADMAP POSITION
+============================================================
+✅ Days 1–2:   Time Value of Money (PV, FV, annuities, perpetuities, NPV, bonds)
+✅ Day 3:      Probability fundamentals + NumPy + variance/std + Law of Large Numbers
+✅ Day 4:      Conditional probability, independence, Bayes' theorem, binomial & geometric
+✅ Day 5:      Continuous distributions (normal, log-normal), SciPy, empirical VaR, fat tails
+✅ Day 6:      Pandas, financial data pipelines, portfolio variance/covariance, risk dashboard
+▶️ Day 7:     Mean-Variance Portfolio Theory, Sharpe Ratio, SciPy optimization, efficient frontier
+
+
+SCHEDULE OVERVIEW
+============================================================
+09:00 – 10:30  Block 1  Reading: Mean-variance theory & Sharpe Ratio
+10:30 – 12:30  Block 2  Problem set (14 problems)
+12:30 – 01:15  Lunch
+01:15 – 02:45  Block 3  Reading: SciPy optimization intro
+02:45 – 04:30  Block 4  Guided coding: efficient frontier (day7_efficient_frontier.py)
+04:30 – 05:45  Block 5  Mini-project: Portfolio optimizer (day7_portfolio_optimizer.py)
+05:45 – 06:00  Block 6  Daily log
+
+
+============================================================
+BLOCK 1 — READING: MEAN-VARIANCE THEORY & SHARPE RATIO (9:00–10:30)
+============================================================
+
+Key terms to define in your notes:
+
+  Expected return of a portfolio:
+    Weighted average of each asset's expected return.
+    E[R_p] = w1*E[R1] + w2*E[R2] + ... + wn*E[Rn]
+
+  Portfolio variance:
+    NOT just the weighted average of individual variances.
+    Includes covariance terms.
+    Two-asset formula:
+      σ²_p = w1²σ1² + w2²σ2² + 2*w1*w2*σ12
+    where σ12 = cov(asset1, asset2)
+
+  Efficient frontier:
+    The set of portfolios offering the highest expected return
+    for a given level of risk. Any portfolio not on the frontier
+    is suboptimal.
+
+  Sharpe Ratio:
+    S = (R_p − R_f) / σ_p
+    R_p = portfolio return
+    R_f = risk-free rate (e.g. 4% annualized)
+    σ_p = portfolio standard deviation
+    Higher Sharpe = more return per unit of risk.
+
+  Minimum variance portfolio:
+    The point on the efficient frontier with the lowest σ_p.
+
+  Maximum Sharpe portfolio:
+    The weights that maximize the Sharpe Ratio.
+
+  Risk-free rate:
+    Return achievable with essentially zero risk.
+    Approximated by short-term US Treasury yields.
+
+Reading 1 — Mean-Variance Optimization:
+  https://www.investopedia.com/terms/m/modernportfoliotheory.asp
+  Focus on: efficient frontier geometry, minimum variance portfolio,
+  role of correlation.
+
+Reading 2 — Sharpe Ratio:
+  https://www.investopedia.com/terms/s/sharperatio.asp
+  Focus on: formula, intuition, limitations section.
+
+
+============================================================
+BLOCK 2 — PROBLEM SET (10:30–12:30)
+============================================================
+
+Section A — Portfolio Expected Return
+
+Q1. Three assets:
+    Asset A: weight=0.40, E[R]=12%
+    Asset B: weight=0.35, E[R]=7%
+    Asset C: weight=0.25, E[R]=15%
+    Find the expected portfolio return.
+
+Q2. Two-asset portfolio, E[R_p]=9.5%.
+    Asset X: E[R]=6%, weight=0.30.
+    Find E[R] of Asset Y.
+
+Q3. Target portfolio return = 10%.
+    Asset A: E[R]=6%, Asset B: E[R]=14%.
+    Find weights (must sum to 1).
+
+Section B — Portfolio Variance & Standard Deviation
+
+Q4. w1=0.6, σ1=0.20, w2=0.4, σ2=0.15, ρ=0.3
+    (a) Find covariance σ12
+    (b) Find portfolio variance σ²_p
+    (c) Find portfolio std σ_p
+
+Q5. Repeat Q4 with ρ=−0.3.
+    What happens to risk? Why?
+
+Q6. Repeat Q4 with ρ=1.0.
+    What does this tell you about diversification?
+
+Q7. σ_p=0.14, w1=0.5, σ1=0.18, σ2=0.12, ρ=0.2.
+    Verify σ_p using the two-asset variance formula.
+
+Section C — Sharpe Ratio
+
+Q8. Return=11%, σ=16%, R_f=4%. Compute Sharpe Ratio.
+
+Q9. Portfolio A: return=14%, σ=22%, R_f=4%
+    Portfolio B: return=9%, σ=10%, R_f=4%
+    Which has better Sharpe? Which would you prefer and why
+    might the answer depend on your goals?
+
+Q10. Sharpe=0.8, σ=0.15, R_f=3%. Find expected return.
+
+Section D — Conceptual (2–4 sentences each)
+
+Q11. Why is the efficient frontier curved rather than a straight line?
+
+Q12. If two assets have correlation exactly −1, what is the minimum
+     possible portfolio standard deviation? Why?
+
+Q13. Why subtract the risk-free rate in the Sharpe Ratio rather than
+     just dividing return by risk?
+
+Q14. Fund A returned 18%, Fund B returned 12%. Can you determine
+     which performed better from a quant risk perspective?
+     What else would you need to know?
+
+
+============================================================
+BLOCK 3 — READING: SCIPY OPTIMIZATION INTRO (1:15–2:45)
+============================================================
+
+Key terms:
+
+  Objective function:
+    The function you're trying to maximize or minimize.
+    Since scipy.optimize.minimize only minimizes, maximize Sharpe
+    by minimizing the NEGATIVE Sharpe.
+
+  Constraints:
+    Rules the optimizer must respect.
+    Portfolio constraint: weights must sum to 1.
+    Format: {"type": "eq", "fun": lambda w: np.sum(w) - 1}
+
+  Bounds:
+    Limits on individual variables.
+    No short-selling: each weight between 0 and 1.
+    Format: tuple((0, 1) for _ in range(n_assets))
+
+  scipy.optimize.minimize:
+    Key arguments:
+      fun        — objective function
+      x0         — starting guess (initial weights)
+      method     — use 'SLSQP' for constrained optimization
+      bounds     — per-variable limits
+      constraints — equality/inequality constraints
+
+Reading 1 — SciPy minimize docs:
+  https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
+  Focus on: fun, x0, method, bounds, constraints parameters and examples.
+
+Reading 2 — Portfolio optimization with SciPy:
+  Search: "towards data science python portfolio optimization efficient frontier"
+  Find a post showing scipy.optimize.minimize with portfolio weights.
+  Focus on code structure.
+
+
+============================================================
+BLOCK 4 — GUIDED CODING: EFFICIENT FRONTIER (2:45–4:30)
+============================================================
+
+File: day7_efficient_frontier.py
+
+Build in steps — type each piece, run it, check output before continuing.
+
+--- STEP 1: Setup and synthetic data ---
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.optimize import minimize
+
+np.random.seed(42)
+rng = np.random.default_rng(42)
+
+n_days = 252
+returns_data = pd.DataFrame({
+    "AAPL": rng.normal(0.0005, 0.018, n_days),
+    "MSFT": rng.normal(0.0004, 0.015, n_days),
+    "JPM":  rng.normal(0.0003, 0.012, n_days)
+})
+
+mean_returns = returns_data.mean() * 252
+cov_matrix = returns_data.cov() * 252
+
+print("Annualized Mean Returns:")
+print(mean_returns)
+print("\nAnnualized Covariance Matrix:")
+print(cov_matrix)
+
+Term: Covariance matrix — square matrix where entry (i,j) is the
+covariance between asset i and asset j. Diagonal entries are variances.
+.cov() is like .corr() but not normalized to [-1, 1].
+
+--- STEP 2: Portfolio performance function ---
+
+def portfolio_performance(weights, mean_returns, cov_matrix, risk_free_rate=0.04):
+    port_return = np.dot(weights, mean_returns)
+    port_vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))
+    sharpe = (port_return - risk_free_rate) / port_vol
+    return port_return, port_vol, sharpe
+
+Notes:
+  np.dot(weights, mean_returns)       — weighted average return
+  np.dot(cov_matrix, weights)         — matrix-vector multiplication
+  outer np.dot(weights.T, ...)        — scalar portfolio variance
+
+--- STEP 3: Monte Carlo simulation ---
+
+n_portfolios = 5000
+results = np.zeros((3, n_portfolios))
+weights_record = []
+
+for i in range(n_portfolios):
+    w = rng.random(3)
+    w /= w.sum()
+    weights_record.append(w)
+    ret, vol, sharpe = portfolio_performance(w, mean_returns, cov_matrix)
+    results[0, i] = ret
+    results[1, i] = vol
+    results[2, i] = sharpe
+
+print(f"Best Sharpe from simulation: {results[2].max():.4f}")
+
+--- STEP 4: Optimize for max Sharpe ---
+
+def neg_sharpe(weights, mean_returns, cov_matrix, risk_free_rate=0.04):
+    return -portfolio_performance(weights, mean_returns, cov_matrix, risk_free_rate)[2]
+
+n_assets = len(mean_returns)
+constraints = {"type": "eq", "fun": lambda w: np.sum(w) - 1}
+bounds = tuple((0, 1) for _ in range(n_assets))
+x0 = np.array([1/n_assets] * n_assets)
+
+opt_result = minimize(neg_sharpe, x0,
+                      args=(mean_returns, cov_matrix),
+                      method="SLSQP",
+                      bounds=bounds,
+                      constraints=constraints)
+
+opt_weights = opt_result.x
+opt_ret, opt_vol, opt_sharpe = portfolio_performance(opt_weights, mean_returns, cov_matrix)
+
+print(f"\nOptimal Weights: {dict(zip(returns_data.columns, opt_weights.round(4)))}")
+print(f"Optimal Return:     {opt_ret:.4f}")
+print(f"Optimal Volatility: {opt_vol:.4f}")
+print(f"Optimal Sharpe:     {opt_sharpe:.4f}")
+
+--- STEP 5: Plot the efficient frontier ---
+
+plt.figure(figsize=(10, 6))
+plt.scatter(results[1], results[0], c=results[2], cmap="viridis",
+            alpha=0.5, s=10, label="Random Portfolios")
+plt.colorbar(label="Sharpe Ratio")
+plt.scatter(opt_vol, opt_ret, color="red", marker="*", s=300, label="Max Sharpe Portfolio")
+plt.xlabel("Annualized Volatility (σ)")
+plt.ylabel("Annualized Return")
+plt.title("Efficient Frontier — Monte Carlo Simulation")
+plt.legend()
+plt.show()
+
+The scatter colors each portfolio by Sharpe Ratio.
+The red star marks the optimizer's result.
+The upper-left edge of the cloud IS the efficient frontier.
+
+Before moving to Block 5, describe what the plot looks like.
+
+
+============================================================
+BLOCK 5 — MINI-PROJECT: PORTFOLIO OPTIMIZER (4:30–5:45)
+============================================================
+
+File: day7_portfolio_optimizer.py
+
+Build from scratch — do not copy Block 4.
+
+Part 1 — Setup:
+  Same synthetic data as Block 4 (same seed, same three assets, annualized).
+
+Part 2 — Equal-weight baseline:
+  Compute and print return, volatility, and Sharpe Ratio for
+  equal-weighted portfolio (1/3 each). This is your benchmark.
+
+Part 3 — Optimize for max Sharpe:
+  Use scipy.optimize.minimize with SLSQP.
+  Print optimal weights and performance stats.
+
+Part 4 — Optimize for minimum variance:
+  Write a second optimizer that minimizes portfolio volatility.
+  Same constraints and bounds.
+  Print min-variance weights and stats.
+
+Part 5 — Comparison table:
+  Print a pandas DataFrame comparing all three portfolios.
+  Columns: AAPL weight, MSFT weight, JPM weight,
+           Annualized Return, Annualized Volatility, Sharpe Ratio.
+  Rows: Equal-weight, Max Sharpe, Min Variance.
+
+Part 6 — Plot:
+  Monte Carlo scatter (from Block 4 approach) as background.
+  Overlay all three portfolios as labeled stars:
+    Red   = Max Sharpe
+    Blue  = Min Variance
+    Green = Equal-weight
+
+
+============================================================
+BLOCK 6 — DAILY LOG (5:45–6:00)
+============================================================
+
+Paste these at the start of tomorrow's chat:
+
+1. Did you finish all blocks?
+2. What was the hardest part, and did you figure it out?
+3. What clicked well?
+4. Did the optimizer produce weights that made intuitive sense
+   (e.g. allocating more to the best risk-adjusted asset)?
+5. Anything else?
+
+
+============================================================
+END OF DAY 7
+============================================================
