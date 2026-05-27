@@ -1,0 +1,280 @@
+============================================================
+QUANT FINANCE STUDY PLAN — DAY 6
+============================================================
+
+ROADMAP POSITION
+----------------
+Phase 1, Week 1 — Day 6
+
+Completed:
+  [x] Days 1–2: Time Value of Money (PV, FV, annuities, perpetuities, NPV, bond basics)
+  [x] Day 3:    Probability fundamentals + NumPy + variance/std + Law of Large Numbers
+  [x] Day 4:    Conditional probability, independence, Bayes' theorem, binomial & geometric
+  [x] Day 5:    Continuous distributions (normal, log-normal), SciPy, empirical vs fitted VaR
+  [ ] Day 6:    Pandas + expected value & portfolio variance + portfolio risk dashboard
+
+SCHEDULE OVERVIEW
+-----------------
+9:00  – 10:30  Block 1: Reading — Pandas fundamentals
+10:30 – 12:30  Block 2: Pandas exercises (day6_pandas_exercises.py)
+12:30 – 1:15   Lunch
+1:15  – 2:30   Block 3: Reading — Expected value & portfolio variance
+2:30  – 4:00   Block 4: Problem set — 14 problems
+4:00  – 5:45   Block 5: Mini-project — Portfolio risk dashboard (day6_portfolio_dashboard.py)
+5:45  – 6:00   Block 6: Daily log
+
+Target end: ~6:00 PM
+
+
+============================================================
+BLOCK 1 — READING: PANDAS FUNDAMENTALS (9:00–10:30)
+============================================================
+
+Key terms to define in your notes:
+  - DataFrame: a 2D table with labeled rows and columns (like a programmable spreadsheet)
+  - Series: a single column of a DataFrame — a 1D labeled array
+  - Index: the row labels of a DataFrame (for financial data, almost always a date/timestamp)
+  - iloc vs loc: iloc = select by integer position; loc = select by label (date string, etc.)
+  - NaN: "Not a Number" — pandas' representation of missing data
+
+READING 1:
+  Pandas "10 minutes to pandas" guide
+  URL: https://pandas.pydata.org/docs/user_guide/10min.html
+  Read: "Object creation," "Viewing data," "Selection," and "Operations"
+  Skip: "Merge," "Grouping," and "Reshaping" sections
+
+READING 2:
+  Pandas time series basics
+  URL: https://pandas.pydata.org/docs/user_guide/timeseries.html
+  Read: First two sections only — "Overview" and "Timestamps vs. Time Spans"
+
+For each section read: write 2–3 bullet notes in your own words.
+
+
+============================================================
+BLOCK 2 — PANDAS EXERCISES (10:30–12:30)
+============================================================
+
+File: day6_pandas_exercises.py
+
+Setup code (copy this at the top of your file):
+
+  import numpy as np
+  import pandas as pd
+
+  rng = np.random.default_rng(seed=42)
+
+  dates = pd.date_range(start="2023-01-02", periods=252, freq="B")  # "B" = business days
+  price_data = {
+      "AAPL": 100 * np.cumprod(1 + rng.normal(0.0005, 0.018, 252)),
+      "MSFT": 100 * np.cumprod(1 + rng.normal(0.0004, 0.015, 252)),
+      "JPM":  100 * np.cumprod(1 + rng.normal(0.0003, 0.012, 252)),
+  }
+  prices = pd.DataFrame(price_data, index=dates)
+
+Key term: np.cumprod() — cumulative product. Multiplies each day's return factor
+(1 + r) one at a time, giving the running stock price path over time.
+
+TASKS (print each result with a clear label):
+
+  Task 1:  Print the first 5 rows using .head()
+  Task 2:  Print the last 5 rows using .tail()
+  Task 3:  Print the shape of the DataFrame (rows, columns)
+  Task 4:  Select only the AAPL column and print its type — Series or DataFrame?
+  Task 5:  Select rows for March 2023 only using .loc["2023-03"]. Print first 3 rows.
+  Task 6:  Compute daily returns for all stocks using .pct_change(). Store as `returns`.
+           Drop the first row (NaN). Print first 3 rows.
+           Term: .pct_change() = (current - previous) / previous for each row.
+  Task 7:  Compute mean daily return for each stock using .mean(). Print.
+  Task 8:  Compute daily standard deviation for each stock using .std(). Print.
+  Task 9:  Find the single worst daily return across all three stocks.
+           Hint: .min().min() on the returns DataFrame.
+  Task 10: Add a "Portfolio" column to prices — equal-weighted average of all three stocks
+           each day: prices[["AAPL","MSFT","JPM"]].mean(axis=1). Print first 5 rows.
+
+
+============================================================
+BLOCK 3 — READING: EXPECTED VALUE & PORTFOLIO VARIANCE (1:15–2:30)
+============================================================
+
+Key terms to define in your notes:
+
+  Expected value E[X]:
+    Probability-weighted average outcome.
+    Discrete: E[X] = sum of xᵢ * P(xᵢ)
+    Continuous: E[X] = integral of x * f(x) dx
+    In finance: E[return] = best estimate of average return.
+
+  Variance Var(X):
+    E[(X - mu)^2] — average squared deviation from the mean.
+    In finance: variance = risk.
+
+  Covariance Cov(X, Y):
+    E[(X - mu_x)(Y - mu_y)] — how two assets move together.
+    Positive = move together. Negative = offset each other.
+
+  Correlation rho(X, Y):
+    Cov(X, Y) / (sigma_x * sigma_y)
+    Normalized to range [-1, 1]. Easier to interpret than raw covariance.
+
+  Portfolio variance (2-asset):
+    Var(w1*R1 + w2*R2) = w1^2*Var(R1) + w2^2*Var(R2) + 2*w1*w2*Cov(R1,R2)
+    The last term is the diversification effect — negative covariance lowers
+    portfolio variance below the weighted individual variances.
+
+READING 1:
+  Brilliant.org — Expected Value
+  URL: https://brilliant.org/wiki/expected-value/
+  Focus on: definition, discrete formula, linearity of expectation
+
+READING 2:
+  Statlect — Variance
+  URL: https://www.statlect.com/fundamentals-of-probability/variance
+  Read: "Definition," "Properties," linear transformations
+  Then follow the Covariance link at the bottom and read that article.
+
+
+============================================================
+BLOCK 4 — PROBLEM SET (2:30–4:00)
+============================================================
+
+Work by hand unless stated otherwise. 14 problems total.
+
+--- Section A: Expected Value (Problems 1–4) ---
+
+Problem 1:
+  A stock has three possible outcomes next year:
+    +20% with probability 0.3
+    +5%  with probability 0.5
+    -10% with probability 0.2
+  What is the expected return?
+
+Problem 2:
+  You hold a position with the following outcomes:
+    Lose $50,000 with prob 0.02
+    Lose $10,000 with prob 0.08
+    Gain $5,000  with prob 0.60
+    Gain $20,000 with prob 0.30
+  What is the expected P&L?
+  (P&L = Profit and Loss — running tally of gains and losses on a trading book.)
+
+Problem 3:
+  A bond pays $1,000 at maturity with prob 0.95 (no default)
+  and $200 with prob 0.05 (default). What is the expected payoff?
+
+Problem 4:
+  Two dice are rolled. Let X = their sum. Compute E[X] using linearity of expectation.
+  Do NOT enumerate all 36 outcomes. Hint: E[sum] = E[die 1] + E[die 2].
+
+--- Section B: Variance & Standard Deviation (Problems 5–8) ---
+
+Problem 5:
+  A daily return has mean 0.001 and variance 0.0004.
+  What is the standard deviation?
+  What is the annualized standard deviation (252 trading days, independent daily returns)?
+  Hint: Var(sum of n independent) = n * Var(single)
+
+Problem 6:
+  Asset X has daily returns: {-0.02, -0.01, 0.00, 0.01, 0.02} each with probability 0.2.
+  Compute the variance by hand using: Var(X) = E[(X - mu)^2]
+
+Problem 7:
+  Two assets have the same expected return. Asset A has sigma=0.01, Asset B has sigma=0.03.
+  A risk-averse investor prefers A. Explain in 2–3 sentences why variance is the right
+  measure of risk and what sigma=0.03 implies in plain English.
+
+Problem 8:
+  A stock's daily return has mu=0.0008, sigma=0.018.
+  What is the probability of a loss on a given day? (Assume normally distributed.)
+  Hint: compute the Z-score for return=0, then use the CDF.
+
+--- Section C: Covariance & Portfolio Variance (Problems 9–12) ---
+
+Problem 9:
+  Stock A: Var=0.0004, Stock B: Var=0.0009, Cov(A,B)=0.0001
+  Portfolio weights: 60% A, 40% B
+  Compute the portfolio variance.
+
+Problem 10:
+  Same setup as Problem 9, but Cov(A,B) = -0.0001.
+  Compute the portfolio variance. Is it higher or lower than Problem 9? Why?
+
+Problem 11:
+  Two assets are perfectly uncorrelated (Cov=0). Both have w=0.5, sigma=0.02.
+  What is the portfolio standard deviation?
+  Is it the same as each individual asset? What does this illustrate about diversification?
+
+Problem 12:
+  Cov(A,B)=0.00015, sigma_A=0.015, sigma_B=0.020.
+  Compute the correlation. Interpret in one sentence.
+
+--- Section D: Synthesis (Problems 13–14) ---
+
+Problem 13:
+  Portfolio: 70% Stock X (mu=0.0006, sigma=0.016), 30% Stock Y (mu=0.0002, sigma=0.010)
+  Cov(X,Y) = 0.00008
+  Compute: (a) portfolio expected return, (b) portfolio variance, (c) portfolio std dev.
+
+Problem 14:
+  Using Problem 13 portfolio, compute the 1-day 95% VaR (5th percentile of return
+  distribution). Assume normally distributed returns. Use Z = -1.645.
+
+
+============================================================
+BLOCK 5 — MINI-PROJECT: PORTFOLIO RISK DASHBOARD (4:00–5:45)
+============================================================
+
+File: day6_portfolio_dashboard.py
+
+Real-world context: Risk analysts at banks and funds build exactly this kind of tool —
+a dashboard that takes a portfolio of assets and reports key risk metrics used daily.
+Today's version is simplified but the structure is identical to what a junior quant
+risk analyst would be asked to build.
+
+Use the same synthetic prices DataFrame setup from Block 2.
+
+Part 1 — Return Statistics:
+  1. Compute daily returns using .pct_change(), drop NaNs.
+  2. For each stock, print:
+       - Mean daily return
+       - Daily standard deviation
+       - Annualized standard deviation (daily sigma * sqrt(252))
+       - 1-day 95% VaR (5th percentile of empirical returns via np.percentile())
+
+Part 2 — Correlation Matrix:
+  3. Compute correlation matrix using .corr(). Print with a header label.
+     Term: Correlation matrix — table of pairwise correlations between all assets.
+     Diagonal is always 1. First thing a risk analyst looks at.
+
+Part 3 — Portfolio Risk:
+  4. Compute equal-weighted portfolio daily returns: port_returns = returns.mean(axis=1)
+  5. Print portfolio: mean daily return, daily sigma, annualized sigma, 1-day 95% VaR.
+  6. Print: "Avg individual sigma: X | Portfolio sigma: Y"
+     This makes the diversification effect visible.
+
+Part 4 — Simple Plot:
+  7. Plot cumulative return of each stock and the portfolio over 252 days on one chart.
+     Cumulative return formula: (1 + returns).cumprod() - 1
+     Label all lines and axes.
+
+Extension (if time allows):
+  Add 99% VaR and print a summary table comparing individual and portfolio VaR at
+  both confidence levels.
+
+
+============================================================
+BLOCK 6 — DAILY LOG (5:45–6:00)
+============================================================
+
+Paste these answers at the start of tomorrow's chat:
+
+  1. Did you finish all blocks?
+  2. What was the hardest part, and did you figure it out?
+  3. What clicked well?
+  4. Anything about portfolio variance or covariance that felt unclear?
+  5. Anything else?
+
+
+============================================================
+END OF DAY 6
+============================================================
