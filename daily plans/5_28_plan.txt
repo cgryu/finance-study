@@ -1,0 +1,194 @@
+============================================================
+QUANT FINANCE STUDY PROGRAM — DAY 8
+Phase 1, Week 2 — Beach Day (Shortened Schedule)
+============================================================
+
+ROADMAP POSITION
+============================================================
+✅ Days 1–2:   Time Value of Money (PV, FV, annuities, perpetuities, NPV, bonds)
+✅ Day 3:      Probability fundamentals + NumPy + variance/std + Law of Large Numbers
+✅ Day 4:      Conditional probability, independence, Bayes' theorem, binomial & geometric
+✅ Day 5:      Continuous distributions (normal, log-normal), SciPy, empirical VaR, fat tails
+✅ Day 6:      Pandas, financial data pipelines, portfolio variance/covariance, risk dashboard
+✅ Day 7:      Mean-Variance Portfolio Theory, Sharpe Ratio, SciPy optimization, efficient frontier
+               (Block 5 carried over → warmup today)
+▶️ Day 8:     Block 5 warmup + VaR & Expected Shortfall deep dive
+
+
+SCHEDULE OVERVIEW
+============================================================
+09:00 – 10:30  Block 1  Warmup: finish day7_portfolio_optimizer.py
+10:30 – 12:30  Block 2  Reading: VaR & Expected Shortfall
+12:30 – 01:15  Lunch
+01:15 – 02:30  Block 3  Problem set (10 problems)
+02:30 – 03:00  Block 4  Daily log + wrap
+
+
+============================================================
+BLOCK 1 — WARMUP: day7_portfolio_optimizer.py (9:00–10:30)
+============================================================
+
+Open your Day 7 efficient frontier file for reference.
+Copy over portfolio_performance() and your returns/covariance data.
+
+Part 1 — Equal-weight portfolio:
+  equal_weights = np.array([1/3, 1/3, 1/3])
+  Compute annualized return, volatility, and Sharpe Ratio.
+
+Part 2 — Max Sharpe optimizer:
+  Minimize the negative Sharpe Ratio using scipy.optimize.minimize.
+  Constraints: weights sum to 1.
+  Bounds: each weight in [0, 1].
+  Method: 'SLSQP'
+
+  def neg_sharpe(weights, mean_returns, cov_matrix, risk_free_rate=0.04):
+      r, vol, sharpe = portfolio_performance(weights, mean_returns, cov_matrix)
+      return -sharpe
+
+  Print optimal weights and performance stats.
+
+Part 3 — Min variance optimizer:
+  Minimize portfolio volatility (not Sharpe).
+  Same constraints and bounds.
+  Print min-variance weights and stats.
+
+Part 4 — Comparison table:
+  pandas DataFrame with columns: Return, Volatility, Sharpe
+  Rows: Equal Weight, Max Sharpe, Min Variance
+
+Part 5 — Plot:
+  Plot all three portfolios as labeled stars on the Monte Carlo scatter.
+  Different color per portfolio.
+  Re-use scatter plot code from day7_efficient_frontier.py.
+
+
+============================================================
+BLOCK 2 — READING: VaR & EXPECTED SHORTFALL (10:30–12:30)
+============================================================
+
+KEY TERMS — define these in your notes:
+
+  Value at Risk (VaR):
+    The maximum loss you would expect NOT to exceed at a given
+    confidence level over a given time horizon.
+    Example: 1-day 95% VaR = $50,000 means on 95% of days
+    you lose less than $50k. VaR says nothing about how large
+    the loss is on the remaining 5% of days.
+
+  Confidence level:
+    The probability threshold.
+    95% VaR → cuts at the 5th percentile of the loss distribution.
+    99% VaR → cuts at the 1st percentile.
+    Higher confidence = more extreme (worse) VaR number.
+
+  Time horizon:
+    VaR is always stated for a specific period (1-day, 10-day, etc.)
+    Scaling rule: T-day VaR ≈ 1-day VaR × sqrt(T)
+    Assumes returns are independent across days.
+
+  Parametric VaR (variance-covariance method):
+    Assumes normal distribution.
+    VaR = -(μ - z·σ)
+    z = 1.645 for 95%, z = 2.326 for 99%
+
+  Historical VaR:
+    Sort actual past returns, find the relevant percentile.
+    No distributional assumption. You built this in Day 5.
+
+  Expected Shortfall (ES) / CVaR:
+    Given that we are in the worst X% of outcomes,
+    what is the AVERAGE loss?
+    ES = mean of all losses beyond the VaR threshold.
+    ES is always worse (larger loss) than VaR at the same
+    confidence level.
+
+  Basel III:
+    International banking regulatory framework.
+    Mandates major banks use ES (not VaR) for regulatory capital.
+
+READINGS:
+  1. Investopedia — Value at Risk:
+     https://www.investopedia.com/terms/v/var.asp
+     Focus: three methods, limitations, confidence/time horizon framing.
+
+  2. Investopedia — Expected Shortfall:
+     https://www.investopedia.com/terms/e/expected-shortfall.asp
+     Focus: how ES is calculated, why it's superior to VaR, Basel III.
+
+
+============================================================
+BLOCK 3 — PROBLEM SET (1:15–2:30)
+============================================================
+
+z-scores for reference:
+  95% confidence → z = 1.645
+  99% confidence → z = 2.326
+
+Parametric VaR formula: VaR = -(μ - z·σ)
+  (positive result = a loss)
+
+------------------------------------------------------------
+SECTION A — VaR Interpretation
+------------------------------------------------------------
+
+Q1. A portfolio has a 1-day 99% VaR of $120,000.
+    (a) What does this mean in plain English?
+    (b) On roughly how many trading days per year (252 days)
+        would you expect to exceed this loss?
+    (c) Does VaR tell you how large the loss will be on those
+        days? Why or why not?
+
+Q2. A portfolio has a 1-day 95% VaR of $80,000.
+    Estimate the 10-day 95% VaR using the square-root-of-time
+    scaling rule. Show your work.
+
+------------------------------------------------------------
+SECTION B — Parametric VaR
+------------------------------------------------------------
+
+Q3. Daily mean return μ = 0.0005, daily std σ = 0.012.
+    (a) Compute 1-day 95% parametric VaR (as a return).
+    (b) Compute 1-day 99% parametric VaR (as a return).
+    (c) Portfolio value = $2,000,000.
+        Convert both to dollar VaR.
+
+Q4. Portfolio A: μ = 0.001, σ = 0.015
+    Portfolio B: μ = 0.0005, σ = 0.009
+    Compute 1-day 95% VaR for each.
+    Which has higher VaR? Does that make it the worse portfolio?
+    Explain in 2 sentences.
+
+------------------------------------------------------------
+SECTION C — Expected Shortfall (Conceptual)
+------------------------------------------------------------
+
+Q5. "Our 1-day 99% VaR is $200,000 and our 1-day 99% ES is $340,000."
+    (a) What does ES tell you that VaR does not?
+    (b) Can ES ever be lower than VaR at the same confidence level?
+        Why or why not?
+
+Q6. 10 daily P&L observations ($000s, losses are negative):
+    +50, +30, +20, +10, +5, -10, -25, -40, -70, -130
+
+    (a) Compute the empirical 90% VaR.
+        (10th percentile = 1 observation in the tail)
+    (b) Compute the 90% ES.
+        (average of all observations at or beyond the VaR)
+
+
+============================================================
+BLOCK 4 — DAILY LOG (2:30–3:00)
+============================================================
+
+Paste these at the start of tomorrow's chat:
+
+1. Did you finish all blocks?
+2. What was hardest?
+3. What clicked well?
+4. Any questions on VaR or ES before we build it in code tomorrow?
+5. Anything else?
+
+
+============================================================
+END OF DAY 8
+============================================================
